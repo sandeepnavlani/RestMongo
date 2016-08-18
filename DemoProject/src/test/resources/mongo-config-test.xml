@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+    <context:annotation-config />
+<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+<property name="location">
+			<value>classpath:/dbtest.properties</value>
+		</property>
+	</bean>
+
+    <bean id="mongoClient" class="com.mongodb.MongoClient" >
+        <constructor-arg type="java.lang.String" value="${mongodb.host}" />
+        <constructor-arg type="int" value="${mongodb.port}" />
+    </bean>
+
+<bean id="productDetailsTestDAO" class="com.ecom.retail.poc.dao.test.impl.ProductDetailsDAOTestImpl" depends-on="mongoClient" init-method="init">
+        <property name="mongoClient" ref="mongoClient" />
+        <property name="dbName" value="${mongodb.db.name}" />
+        <property name="priceCollectionName" value="${mongodb.db.collection.price}" />
+    </bean>
+
+    <context:component-scan base-package="com.ecom.retail.poc.dao" />
+    </beans>
